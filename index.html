@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+
+    <title>Hello, world!</title>
+  </head>
+  <body>
+    <h1>Hello, world!</h1>
+    <div id="app">
+      {{ message }}
+      <div class="container">
+          <div class="row justify-content-center">
+              <div class="col-md-6">
+                  <input type="text" v-model="iqbal">
+                  <label for="" :title="title">{{ iqbal }}</label>
+              </div>
+
+              <form @submit.prevent="addItem">
+                  <div class="form-group">
+                      <label for="">Add New Product And price</label>
+                      <input type="text" v-model="name" class="form-control">
+                      {{ name }}
+                      <br>
+                      <input type="text" v-model="price" class="form-control">
+                      {{ price }}
+                      <br>
+                      <input type="submit" class="btn btn-info btn-sm">
+                  </div>
+              </form>
+              <br>
+              <ul>
+                  <li v-for="item in items"> {{ item.name }}  {{ item.price}}</li>
+              </ul>
+          </div>
+      </div>
+      <br><hr><br>
+      <div class="container">
+        <h3 class="text-center">Comuted Propertis</h3>
+          <div class="row">
+              <div class="col-md-6">
+                  <h4> Paid Payment</h4>
+                  <hr>
+                 <ul>
+                      <li v-for="item in items">{{ item.name }} {{ item.price }}</li>
+                  </ul>
+              </div>
+              <div class="col-md-6">
+                  <h4> Unpaid Payment</h4>
+                  <hr>
+                  <ul>
+                      <li v-for="(item,k) in unpaidPayments">{{ item.name }} {{ item.price }}</li>
+                  </ul>
+                  <p>Total Price {{ totalAmount }}</p>
+              </div>
+          </div>
+      </div>
+      <div class="container mt-5">
+          <h3 class="text-center"> Vue Watch Property</h3>
+          <p class="text-center text-muted">Convert Kilometers to meters and meters to kilometers using watch</p>
+          <div class="row justify-content-center">
+              <div class="col-md-6">
+                  <div class="form-group">
+                      <input type="text" name="kilometers" v-model="kilometers" placeholder="kilometers">
+                  </div>
+                  <div class="form-group">
+                      <input type="text" name="meters" v-model="meters" placeholder="meters">
+                  </div>
+              </div>
+              <br><br>
+             
+          </div>
+      </div>
+       <div class="container">
+           <div class="row">
+               <div class="col-md-12">
+                   <task header="I am from header" body="i am form body"></task>
+                   <task header="I am from ho set" body="i am form body fine">hello</task>
+                   <br>
+                   <task>how are you</task> <br>
+                   <task>i am good and you?</task> <br>
+                   <task>good</task>
+               </div>
+           </div>
+       </div>
+    </div>
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        Vue.component('task', {
+            props: [
+                'header',
+                'body'
+            ],
+            data() {
+                return {
+                    isVisible: true
+                };
+            },
+            // methods: {
+            //     hideModel(){
+            //         this.isVisible = false
+            //     },
+            // },
+            template:`
+                <div>
+                    <div class="card" v-show="isVisible">
+                        <div class="card-header">{{ header }} <button class="btn btn-danger btn-sm" @click="isVisible = false">X</button> </div>
+                        <div class="card-body">{{ body }}</div>
+                    </div>
+                </div>
+            `,
+        });
+
+        new Vue({
+          el: '#app',
+          data: {
+            message: 'Hello Vue!',
+            iqbal: "iqbal",
+            title: "Hello",
+            items: [
+                { name: "Mango", price: "100", paid: true },
+                { name: "Orange", price: "200", paid: false },
+                { name: "Banana", price: "40", paid: true},
+            ],
+            name: "",
+            price: "",
+            kilometers: 0,
+            meters: 0,
+            // payments:[
+            //     { name: "mango", pr}
+            // ]
+          },
+
+          methods:{
+            addItem() {
+                this.items.push({
+                    name: this.name,
+                    price: this.price,
+                })
+            }
+          },
+
+          computed: {
+
+            unpaidPayments: function () {
+                return this.items.filter(function(e){
+                    return e.paid;
+                })
+            },
+
+            totalAmount: function(){
+                var total = 0;
+                for(var k=0; k<this.unpaidPayments.length;k++){
+                    total += this.unpaidPayments[k].price;
+                    console.log(total);
+                }
+                console.log(total);
+                return total;
+            }
+
+          },
+
+          watch: {
+            kilometers: function(val){
+                this.kilometers = val;
+                this.meters = val*1000;
+            },
+            meters: function(val){
+                this.kilometers = val/1000;
+                this.meters = val;
+            }
+          },
+          
+
+        });
+        
+        
+       
+    </script>
+  </body>
+</html>
